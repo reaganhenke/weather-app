@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import Graph from './graphs/graph';
-import Header from './header/header';
-import './App.css';
+import React, { Component } from 'react'
+import Graph from './graphs/graph'
+import Header from './header/header'
+import './App.css'
 
 class App extends Component {
   constructor (props) {
@@ -10,6 +10,7 @@ class App extends Component {
     this.state = {
       searchBy: 'lat-long',
       city: '',
+      zip: '',
       latitude: '',
       longitude: '',
       data: null,
@@ -33,19 +34,31 @@ class App extends Component {
         city: '',
         latitude: '',
         longitude: '',
-      });
+        zip: ''
+      })
     }
-    this.setState({[event.target.name]: event.target.value});
+    this.setState({[event.target.name]: event.target.value})
   }
 
   handleSubmit(event) {
-    event.preventDefault();
-    this.getWeatherData();
+    event.preventDefault()
+    this.getWeatherData()
   }
 
   getWeatherData () {
     const appId = 'e72bb3768d242f077628da2034de1cdd';
-    const query = this.state.city ? `q=${this.state.city},us` : `lat=${this.state.latitude}&lon=${this.state.longitude}`
+    let query
+    switch (this.state.searchBy) {
+      case('lat-long'):
+        query = `lat=${this.state.latitude}&lon=${this.state.longitude}`
+        break
+      case('city'):
+        query = `q=${this.state.city},us`
+        break
+      case('zip'):
+        query = `zip=${this.state.zip},us`
+        break
+    }
     fetch(`https://api.openweathermap.org/data/2.5/forecast?${query}&appid=${appId}&units=metric`)
       .then(response => response.json())
       .then(data => {
@@ -63,8 +76,8 @@ class App extends Component {
     };
 
     // disable submit if empty form
-    const { city, latitude, longitude } = this.state;
-    const isEnabled = this.state.searchBy === 'city' ? city : latitude && longitude;
+    const { city, latitude, longitude, zip } = this.state
+    const isEnabled = city || (latitude && longitude) || zip
 
     let innerForm;
     if (this.state.searchBy === "lat-long") {
@@ -76,11 +89,18 @@ class App extends Component {
           <input id="long-input" type="text" value={this.state.longitude} name="longitude" onChange={this.handleChange} placeholder="0°"/>
         </div>
       )
-    } else {
+    } else if (this.state.searchBy === "city") {
       innerForm = (
         <div className="col">
           <label htmlFor="city-input">City:</label>
           <input id="city-input" value={this.state.city} name="city" type="text" onChange={this.handleChange}/>
+        </div>
+      )
+    } else {
+      innerForm = (
+        <div className="col">
+          <label htmlFor="zip-input">Zip code:</label>
+          <input id="zip-input" value={this.state.zip} name="zip" type="text" onChange={this.handleChange}/>
         </div>
       )
     }
@@ -101,6 +121,7 @@ class App extends Component {
           <select id="searchby-input" value={this.state.searchBy} name="searchBy" onChange={this.handleChange}>
             <option value="lat-long">latitude and longitude</option>
             <option value="city">city</option>
+            <option value="zip">zip code</option>
           </select>
           </span>
           {innerForm}
@@ -115,4 +136,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App

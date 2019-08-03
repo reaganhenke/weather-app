@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Line } from 'react-chartjs-2';
-import './graph.css';
+import React, { Component } from 'react'
+import { Line } from 'react-chartjs-2'
+import './graph.css'
 
 const data = {
   datasets: [
@@ -24,7 +24,7 @@ const data = {
       pointHitRadius: 10,
     }
   ]
-};
+}
 
 class Graph extends Component {
   constructor (props) {
@@ -78,4 +78,4 @@ class Graph extends Component {
   }
 }
 
-export default Graph;
+export default Graph
