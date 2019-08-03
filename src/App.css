@@ -19,7 +19,7 @@ form label {
   margin: 0.75rem 0 0.5rem;
 }
 
-select, input {
+select, input[type="text"] {
   background-color: white;
   border: 1px solid black;
   border-radius: 3px;
@@ -50,6 +50,10 @@ select, input {
   border-right: 5px solid transparent;
   border-top: 5px solid black;
   pointer-events: none;
+}
+
+.small {
+  font-weight: normal;
 }
 
 form button {

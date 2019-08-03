@@ -46,7 +46,7 @@ class Graph extends Component {
       data.datasets[0].data = this.props.data.list.map(entry => entry.main[this.state.dataType]).slice(0,15)
       switch(this.state.dataType) {
         case('temp'):
-          data.datasets[0].label = 'Temperature (Celsius)'
+          data.datasets[0].label = 'Temperature'
           break
         case('humidity'):
           data.datasets[0].label  = 'Humidity (%)'

@@ -13,6 +13,7 @@ class App extends Component {
       zip: '',
       latitude: '',
       longitude: '',
+      units: 'metric',
       data: null,
       error: null
     }
@@ -46,7 +47,7 @@ class App extends Component {
   }
 
   getWeatherData () {
-    const appId = 'e72bb3768d242f077628da2034de1cdd';
+    const appId = 'cc25e893cbbdd55aaab7cd579b5f7236';
     let query
     switch (this.state.searchBy) {
       case('lat-long'):
@@ -59,7 +60,7 @@ class App extends Component {
         query = `zip=${this.state.zip},us`
         break
     }
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?${query}&appid=${appId}&units=metric`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?${query}&appid=${appId}&units=${this.state.units}`)
       .then(response => response.json())
       .then(data => {
         this.setState({data})
@@ -118,13 +119,22 @@ class App extends Component {
         <form onSubmit={this.handleSubmit} className="col">
           <label htmlFor="searchby-input">Search by:</label>
           <span className="after-arrow">
-          <select id="searchby-input" value={this.state.searchBy} name="searchBy" onChange={this.handleChange}>
-            <option value="lat-long">latitude and longitude</option>
-            <option value="city">city</option>
-            <option value="zip">zip code</option>
-          </select>
+            <select id="searchby-input" value={this.state.searchBy} name="searchBy" onChange={this.handleChange}>
+              <option value="lat-long">latitude and longitude</option>
+              <option value="city">city</option>
+              <option value="zip">zip code</option>
+            </select>
           </span>
           {innerForm}
+          <label>Units:</label>
+          <label className="small">
+            <input type="radio" value="metric" name="units" onChange={this.handleChange} checked={this.state.units === "metric"}/>
+            Celsius
+          </label>
+          <label className="small">
+            <input type="radio" value="imperial" name="units" onChange={this.handleChange}/>
+            Fahrenheit
+          </label>
           <button type="submit" disabled={!isEnabled}>Let's go!</button>
           <hr></hr>
         </form>
