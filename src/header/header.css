@@ -1,0 +1,21 @@
+header {
+  background-color: #F1DEFF;
+  padding: 2rem;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  margin: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  header {
+    padding: 1rem;
+  }
+  header span {
+    display: none;
+  }
+  h1 {
+    font-size: 5rem;
+  }
+}
