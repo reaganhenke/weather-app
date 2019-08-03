@@ -42,8 +42,8 @@ class Graph extends Component {
   
   render(){
     if (this.props.data) {
-      data.labels = this.props.data.list.map(entry => entry.dt_txt).slice(0,20)
-      data.datasets[0].data = this.props.data.list.map(entry => entry.main[this.state.dataType]).slice(0,20)
+      data.labels = this.props.data.list.map(entry => entry.dt_txt).slice(0,15)
+      data.datasets[0].data = this.props.data.list.map(entry => entry.main[this.state.dataType]).slice(0,15)
       switch(this.state.dataType) {
         case('temp'):
           data.datasets[0].label = 'Temperature (Celsius)'
@@ -51,26 +51,17 @@ class Graph extends Component {
         case('humidity'):
           data.datasets[0].label  = 'Humidity (%)'
           break
-        case('pressure'):
+        default:
           data.datasets[0].label  = 'Pressure (hPa)'
           break
       }
     }
 
-    let location;
-    if (this.props.city) {
-      location = (
-        <h3>{this.props.city}</h3>
-      )
-    } else {
-      location = (
-        <h3>Latitude:{this.props.latitude}°, Longitude:{this.props.longitude}°</h3>
-      )
-    }
     return (
       <div>
         <h2>Forecast</h2>
-        {location}
+        <h3>City: {this.props.data.city.name}</h3>
+        <h3>Latitude:{this.props.data.city.coord.lat}°, Longitude:{this.props.data.city.coord.lon}°</h3>
         <form>
           <label htmlFor="datatype-input">View:</label>
           <span className="after-arrow">

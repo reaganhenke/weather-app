@@ -12,18 +12,28 @@ class App extends Component {
       city: '',
       latitude: '',
       longitude: '',
-      data: null
+      data: null,
+      error: null
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.baseState = this.state
+    this.setDefault = this.setDefault.bind(this)
+  }
+
+  setDefault(position) {
+    this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude})
+    this.getWeatherData()
   }
 
   handleChange(event) {
     // reset the form if switching search by type
     if (event.target.name === 'searchBy'){
-      this.setState(this.baseState);
+      this.setState({
+        city: '',
+        latitude: '',
+        longitude: '',
+      });
     }
     this.setState({[event.target.name]: event.target.value});
   }
@@ -41,10 +51,18 @@ class App extends Component {
       .then(data => {
         this.setState({data})
       })
-      .catch(e => e)
+      .catch(error => {
+        this.setState({error})
+      })
   }
 
   render(){
+    // if we're not showing anything yet, get current location
+    if (!this.state.data) {
+      navigator.geolocation.getCurrentPosition(this.setDefault)
+    };
+
+    // disable submit if empty form
     const { city, latitude, longitude } = this.state;
     const isEnabled = this.state.searchBy === 'city' ? city : latitude && longitude;
 
@@ -67,9 +85,12 @@ class App extends Component {
       )
     }
 
-    const graph = this.state.data ? (
-      <Graph data={this.state.data} city={this.state.city} longitude={this.state.longitude} latitude={this.state.latitude} type='temp'></Graph>
-    ) : '';
+    let graph;
+    if (this.state.error || (this.state.data && !this.state.data.list)) {
+      graph = (<p>There was an problem with your request. Try again?</p>)
+    } else if (this.state.data) {
+      graph = (<Graph data={this.state.data}></Graph>)
+    }
 
     return (
       <div className="app">
